@@ -132,13 +132,13 @@
 `endif
 
 `ifdef L2_ENABLE
-    `define L2_ENABLED   1
+    `define L2_ENABLED   0
 `else
     `define L2_ENABLED   0
 `endif
 
 `ifdef L3_ENABLE
-    `define L3_ENABLED   1
+    `define L3_ENABLED   0
 `else
     `define L3_ENABLED   0
 `endif
@@ -194,6 +194,17 @@
 `define PLATFORM_MEMORY_INTERLEAVE 1
 `endif
 
+
+`ifndef NUM_MMIO_BANKS
+`define NUM_MMIO_BANKS 1
+`endif
+
+
+`ifndef TOTAL_DEST_BANKS
+`define TOTAL_DEST_BANKS 3
+`endif
+
+
 `ifdef XLEN_64
 
 `ifndef STACK_BASE_ADDR
@@ -203,6 +214,9 @@
 `ifndef STARTUP_ADDR
 `define STARTUP_ADDR    64'h080000000
 `endif
+
+
+
 
 `ifndef USER_BASE_ADDR
 `define USER_BASE_ADDR  64'h000010000
@@ -227,6 +241,11 @@
 
 `ifndef STARTUP_ADDR
 `define STARTUP_ADDR    32'h80000000
+`endif
+
+
+`ifndef BRAM_MMIO_ADDR
+`define BRAM_MMIO_ADDR    32'h70000000
 `endif
 
 `ifndef USER_BASE_ADDR

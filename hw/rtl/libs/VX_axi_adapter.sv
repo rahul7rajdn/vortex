@@ -27,7 +27,8 @@ module VX_axi_adapter #(
     parameter ARBITER        = "R",
     parameter REQ_OUT_BUF    = 0,
     parameter RSP_OUT_BUF    = 0,
-    parameter DATA_SIZE      = DATA_WIDTH/8
+    parameter DATA_SIZE      = DATA_WIDTH/8,
+    parameter NUM_DEST_OUT = NUM_BANKS_OUT + `NUM_MMIO_BANKS
  ) (
     input  wire                     clk,
     input  wire                     reset,
@@ -48,53 +49,53 @@ module VX_axi_adapter #(
     input wire                      mem_rsp_ready [NUM_PORTS_IN],
 
     // AXI write request address channel
-    output wire                     m_axi_awvalid [NUM_BANKS_OUT],
-    input wire                      m_axi_awready [NUM_BANKS_OUT],
-    output wire [ADDR_WIDTH_OUT-1:0] m_axi_awaddr [NUM_BANKS_OUT],
-    output wire [TAG_WIDTH_OUT-1:0] m_axi_awid [NUM_BANKS_OUT],
-    output wire [7:0]               m_axi_awlen [NUM_BANKS_OUT],
-    output wire [2:0]               m_axi_awsize [NUM_BANKS_OUT],
-    output wire [1:0]               m_axi_awburst [NUM_BANKS_OUT],
-    output wire [1:0]               m_axi_awlock [NUM_BANKS_OUT],
-    output wire [3:0]               m_axi_awcache [NUM_BANKS_OUT],
-    output wire [2:0]               m_axi_awprot [NUM_BANKS_OUT],
-    output wire [3:0]               m_axi_awqos [NUM_BANKS_OUT],
-    output wire [3:0]               m_axi_awregion [NUM_BANKS_OUT],
+    output wire                     m_axi_awvalid [NUM_DEST_OUT],
+    input wire                      m_axi_awready [NUM_DEST_OUT],
+    output wire [ADDR_WIDTH_OUT-1:0] m_axi_awaddr [NUM_DEST_OUT],
+    output wire [TAG_WIDTH_OUT-1:0] m_axi_awid [NUM_DEST_OUT],
+    output wire [7:0]               m_axi_awlen [NUM_DEST_OUT],
+    output wire [2:0]               m_axi_awsize [NUM_DEST_OUT],
+    output wire [1:0]               m_axi_awburst [NUM_DEST_OUT],
+    output wire [1:0]               m_axi_awlock [NUM_DEST_OUT],
+    output wire [3:0]               m_axi_awcache [NUM_DEST_OUT],
+    output wire [2:0]               m_axi_awprot [NUM_DEST_OUT],
+    output wire [3:0]               m_axi_awqos [NUM_DEST_OUT],
+    output wire [3:0]               m_axi_awregion [NUM_DEST_OUT],
 
     // AXI write request data channel
-    output wire                     m_axi_wvalid [NUM_BANKS_OUT],
-    input wire                      m_axi_wready [NUM_BANKS_OUT],
-    output wire [DATA_WIDTH-1:0]    m_axi_wdata [NUM_BANKS_OUT],
-    output wire [DATA_SIZE-1:0]     m_axi_wstrb [NUM_BANKS_OUT],
-    output wire                     m_axi_wlast [NUM_BANKS_OUT],
+    output wire                     m_axi_wvalid [NUM_DEST_OUT],
+    input wire                      m_axi_wready [NUM_DEST_OUT],
+    output wire [DATA_WIDTH-1:0]    m_axi_wdata [NUM_DEST_OUT],
+    output wire [DATA_SIZE-1:0]     m_axi_wstrb [NUM_DEST_OUT],
+    output wire                     m_axi_wlast [NUM_DEST_OUT],
 
     // AXI write response channel
-    input wire                      m_axi_bvalid [NUM_BANKS_OUT],
-    output wire                     m_axi_bready [NUM_BANKS_OUT],
-    input wire [TAG_WIDTH_OUT-1:0]  m_axi_bid [NUM_BANKS_OUT],
-    input wire [1:0]                m_axi_bresp [NUM_BANKS_OUT],
+    input wire                      m_axi_bvalid [NUM_DEST_OUT],
+    output wire                     m_axi_bready [NUM_DEST_OUT],
+    input wire [TAG_WIDTH_OUT-1:0]  m_axi_bid [NUM_DEST_OUT],
+    input wire [1:0]                m_axi_bresp [NUM_DEST_OUT],
 
     // AXI read address channel
-    output wire                     m_axi_arvalid [NUM_BANKS_OUT],
-    input wire                      m_axi_arready [NUM_BANKS_OUT],
-    output wire [ADDR_WIDTH_OUT-1:0] m_axi_araddr [NUM_BANKS_OUT],
-    output wire [TAG_WIDTH_OUT-1:0] m_axi_arid [NUM_BANKS_OUT],
-    output wire [7:0]               m_axi_arlen [NUM_BANKS_OUT],
-    output wire [2:0]               m_axi_arsize [NUM_BANKS_OUT],
-    output wire [1:0]               m_axi_arburst [NUM_BANKS_OUT],
-    output wire [1:0]               m_axi_arlock [NUM_BANKS_OUT],
-    output wire [3:0]               m_axi_arcache [NUM_BANKS_OUT],
-    output wire [2:0]               m_axi_arprot [NUM_BANKS_OUT],
-    output wire [3:0]               m_axi_arqos [NUM_BANKS_OUT],
-    output wire [3:0]               m_axi_arregion [NUM_BANKS_OUT],
+    output wire                     m_axi_arvalid [NUM_DEST_OUT],
+    input wire                      m_axi_arready [NUM_DEST_OUT],
+    output wire [ADDR_WIDTH_OUT-1:0] m_axi_araddr [NUM_DEST_OUT],
+    output wire [TAG_WIDTH_OUT-1:0] m_axi_arid [NUM_DEST_OUT],
+    output wire [7:0]               m_axi_arlen [NUM_DEST_OUT],
+    output wire [2:0]               m_axi_arsize [NUM_DEST_OUT],
+    output wire [1:0]               m_axi_arburst [NUM_DEST_OUT],
+    output wire [1:0]               m_axi_arlock [NUM_DEST_OUT],
+    output wire [3:0]               m_axi_arcache [NUM_DEST_OUT],
+    output wire [2:0]               m_axi_arprot [NUM_DEST_OUT],
+    output wire [3:0]               m_axi_arqos [NUM_DEST_OUT],
+    output wire [3:0]               m_axi_arregion [NUM_DEST_OUT],
 
     // AXI read response channel
-    input wire                      m_axi_rvalid [NUM_BANKS_OUT],
-    output wire                     m_axi_rready [NUM_BANKS_OUT],
-    input wire [DATA_WIDTH-1:0]     m_axi_rdata [NUM_BANKS_OUT],
-    input wire                      m_axi_rlast [NUM_BANKS_OUT],
-    input wire [TAG_WIDTH_OUT-1:0]  m_axi_rid [NUM_BANKS_OUT],
-    input wire [1:0]                m_axi_rresp [NUM_BANKS_OUT]
+    input wire                      m_axi_rvalid [NUM_DEST_OUT],
+    output wire                     m_axi_rready [NUM_DEST_OUT],
+    input wire [DATA_WIDTH-1:0]     m_axi_rdata [NUM_DEST_OUT],
+    input wire                      m_axi_rlast [NUM_DEST_OUT],
+    input wire [TAG_WIDTH_OUT-1:0]  m_axi_rid [NUM_DEST_OUT],
+    input wire [1:0]                m_axi_rresp [NUM_DEST_OUT]
 );
     localparam LOG2_DATA_SIZE = `CLOG2(DATA_SIZE);
     localparam BANK_SEL_BITS  = `CLOG2(NUM_BANKS_OUT);
@@ -118,16 +119,34 @@ module VX_axi_adapter #(
 
     // Bank selection
 
-    wire [NUM_PORTS_IN-1:0][BANK_SEL_WIDTH-1:0] req_bank_sel;
-    wire [NUM_PORTS_IN-1:0][BANK_ADDR_WIDTH-1:0] req_bank_addr;
+    // Destination selection
+    localparam DEST_SEL_WIDTH = BANK_SEL_WIDTH + `NUM_MMIO_BANKS;
+    logic [NUM_PORTS_IN-1:0][DEST_SEL_WIDTH-1:0] req_bank_sel;
+    logic [NUM_PORTS_IN-1:0][BANK_ADDR_WIDTH-1:0] req_bank_addr;
 
-    if (NUM_BANKS_OUT > 1) begin : g_bank_sel
+
+initial begin
+    $display("mem_req_addr[0] = %0x", mem_req_addr[0]);
+end
+
+    if (NUM_DEST_OUT > 1) begin : g_bank_sel
         for (genvar i = 0; i < NUM_PORTS_IN; ++i) begin : g_i
             wire [DST_ADDR_WDITH-1:0] mem_req_addr_dst = DST_ADDR_WDITH'(mem_req_addr[i]);
             if (INTERLEAVE) begin : g_interleave
-                assign req_bank_sel[i]  = mem_req_addr_dst[BANK_SEL_BITS-1:0];
-                assign req_bank_addr[i] = mem_req_addr_dst[BANK_SEL_BITS +: BANK_ADDR_WIDTH];
-            end else begin : g_no_interleave
+                always_comb begin
+                    if ((32'({mem_req_addr[i], 6'b0}) >= `BRAM_MMIO_ADDR) && (32'({mem_req_addr[i], 6'b0}) < `STARTUP_ADDR )) begin : g_mmio
+                        req_bank_sel[i]  = DEST_SEL_WIDTH'(DEST_SEL_WIDTH);
+                        req_bank_addr[i] = mem_req_addr_dst[0 +: BANK_ADDR_WIDTH];
+                    end
+                    else begin : g_normal_banks
+                        req_bank_sel[i]  = DEST_SEL_WIDTH'(mem_req_addr_dst[BANK_SEL_BITS-1:0]);
+                        req_bank_addr[i] = mem_req_addr_dst[BANK_SEL_BITS +: BANK_ADDR_WIDTH];
+                    end
+
+                end
+
+            end 
+            else begin : g_no_interleave
                 assign req_bank_sel[i]  = mem_req_addr_dst[BANK_ADDR_WIDTH +: BANK_SEL_BITS];
                 assign req_bank_addr[i] = mem_req_addr_dst[BANK_ADDR_WIDTH-1:0];
             end
@@ -180,10 +199,10 @@ module VX_axi_adapter #(
     wire [NUM_PORTS_IN-1:0][REQ_XBAR_DATAW-1:0] req_xbar_data_in;
     wire [NUM_PORTS_IN-1:0] req_xbar_ready_in;
 
-    wire [NUM_BANKS_OUT-1:0] req_xbar_valid_out;
-    wire [NUM_BANKS_OUT-1:0][REQ_XBAR_DATAW-1:0] req_xbar_data_out;
-    wire [NUM_BANKS_OUT-1:0][NUM_PORTS_IN_WIDTH-1:0] req_xbar_sel_out;
-    wire [NUM_BANKS_OUT-1:0] req_xbar_ready_out;
+    wire [NUM_DEST_OUT-1:0] req_xbar_valid_out;
+    wire [NUM_DEST_OUT-1:0][REQ_XBAR_DATAW-1:0] req_xbar_data_out;
+    wire [NUM_DEST_OUT-1:0][NUM_PORTS_IN_WIDTH-1:0] req_xbar_sel_out;
+    wire [NUM_DEST_OUT-1:0] req_xbar_ready_out;
 
     for (genvar i = 0; i < NUM_PORTS_IN; ++i) begin : g_req_xbar_data_in
         wire tag_ready = mem_req_rw[i] || mem_rd_req_tag_ready[i];
@@ -195,7 +214,7 @@ module VX_axi_adapter #(
 
     VX_stream_xbar #(
         .NUM_INPUTS (NUM_PORTS_IN),
-        .NUM_OUTPUTS(NUM_BANKS_OUT),
+        .NUM_OUTPUTS(NUM_DEST_OUT),
         .DATAW      (REQ_XBAR_DATAW),
         .ARBITER    (ARBITER),
         .OUT_BUF    (REQ_OUT_BUF)
@@ -213,7 +232,7 @@ module VX_axi_adapter #(
         `UNUSED_PIN (collisions)
     );
 
-    for (genvar i = 0; i < NUM_BANKS_OUT; ++i) begin : g_axi_reqs
+    for (genvar i = 0; i < NUM_DEST_OUT; ++i) begin : g_axi_reqs
 
         wire xbar_rw_out;
         wire [BANK_ADDR_WIDTH-1:0] xbar_addr_out;
@@ -306,22 +325,24 @@ module VX_axi_adapter #(
 
     // AXI write response channel (ignore)
 
-    for (genvar i = 0; i < NUM_BANKS_OUT; ++i) begin : g_axi_write_rsp
+    for (genvar i = 0; i < NUM_DEST_OUT; ++i) begin : g_axi_write_rsp
         `UNUSED_VAR (m_axi_bvalid[i])
         `UNUSED_VAR (m_axi_bid[i])
         `UNUSED_VAR (m_axi_bresp[i])
         assign m_axi_bready[i] = 1'b1;
-        `RUNTIME_ASSERT(~m_axi_bvalid[i] || m_axi_bresp[i] == 0, ("%t: *** AXI response error", $time))
-    end
+        if (i != 2 )  begin : g_bank_mmio
+            `RUNTIME_ASSERT(~m_axi_bvalid[i] || m_axi_bresp[i] == 0, ("%t: *** AXI response error", $time))
+        end
+    end 
 
     // AXI read response channel
 
-    wire [NUM_BANKS_OUT-1:0] rsp_xbar_valid_in;
-    wire [NUM_BANKS_OUT-1:0][RSP_XBAR_DATAW-1:0] rsp_xbar_data_in;
-    wire [NUM_BANKS_OUT-1:0][NUM_PORTS_IN_WIDTH-1:0] rsp_xbar_sel_in;
-    wire [NUM_BANKS_OUT-1:0] rsp_xbar_ready_in;
+    wire [NUM_DEST_OUT-1:0] rsp_xbar_valid_in;
+    wire [NUM_DEST_OUT-1:0][RSP_XBAR_DATAW-1:0] rsp_xbar_data_in;
+    wire [NUM_DEST_OUT-1:0][NUM_PORTS_IN_WIDTH-1:0] rsp_xbar_sel_in;
+    wire [NUM_DEST_OUT-1:0] rsp_xbar_ready_in;
 
-    for (genvar i = 0; i < NUM_BANKS_OUT; ++i) begin : g_rsp_xbar_data_in
+    for (genvar i = 0; i < NUM_DEST_OUT; ++i) begin : g_rsp_xbar_data_in
         assign rsp_xbar_valid_in[i] = m_axi_rvalid[i];
         assign rsp_xbar_data_in[i] = {m_axi_rdata[i], m_axi_rid[i][NUM_PORTS_IN_BITS +: READ_TAG_WIDTH]};
         if (NUM_PORTS_IN > 1) begin : g_input_sel
@@ -330,8 +351,10 @@ module VX_axi_adapter #(
             assign rsp_xbar_sel_in[i] = 0;
         end
         assign m_axi_rready[i] = rsp_xbar_ready_in[i];
-        `RUNTIME_ASSERT(~(m_axi_rvalid[i] && m_axi_rlast[i] == 0), ("%t: *** AXI response error", $time))
-        `RUNTIME_ASSERT(~(m_axi_rvalid[i] && m_axi_rresp[i] != 0), ("%t: *** AXI response error", $time))
+         if (i != 2 ) begin : g_bank_mmio__new
+            `RUNTIME_ASSERT(~(m_axi_rvalid[i] && m_axi_rlast[i] == 0), ("%t: *** AXI response error", $time))
+            `RUNTIME_ASSERT(~(m_axi_rvalid[i] && m_axi_rresp[i] != 0), ("%t: *** AXI response error", $time))
+         end
     end
 
     wire [NUM_PORTS_IN-1:0] rsp_xbar_valid_out;
@@ -339,7 +362,7 @@ module VX_axi_adapter #(
     wire [NUM_PORTS_IN-1:0] rsp_xbar_ready_out;
 
     VX_stream_xbar #(
-        .NUM_INPUTS (NUM_BANKS_OUT),
+        .NUM_INPUTS (NUM_DEST_OUT),
         .NUM_OUTPUTS(NUM_PORTS_IN),
         .DATAW      (RSP_XBAR_DATAW),
         .ARBITER    (ARBITER),

@@ -35,7 +35,7 @@ module VX_afu_wrap #(
 `ifdef PLATFORM_MERGED_MEMORY_INTERFACE
 	`REPEAT (1, GEN_AXI_MEM, REPEAT_COMMA),
 `else
-	`REPEAT (`PLATFORM_MEMORY_NUM_BANKS, GEN_AXI_MEM, REPEAT_COMMA),
+	`REPEAT (`TOTAL_DEST_BANKS, GEN_AXI_MEM, REPEAT_COMMA),
 `endif
     // AXI4-Lite slave interface
     input  wire                                 s_axi_ctrl_awvalid,
@@ -108,7 +108,7 @@ module VX_afu_wrap #(
 `ifdef PLATFORM_MERGED_MEMORY_INTERFACE
 	`REPEAT (1, AXI_MEM_TO_ARRAY, REPEAT_SEMICOLON);
 `else
-	`REPEAT (`PLATFORM_MEMORY_NUM_BANKS, AXI_MEM_TO_ARRAY, REPEAT_SEMICOLON);
+	`REPEAT (`TOTAL_DEST_BANKS, AXI_MEM_TO_ARRAY, REPEAT_SEMICOLON);
 `endif
 
 	reg [`CLOG2(`RESET_DELAY+1)-1:0] vx_reset_ctr;
