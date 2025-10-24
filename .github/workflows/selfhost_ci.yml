@@ -3,11 +3,13 @@ name: Build and Test Vortex
 on:
   pull_request:
     branches: [main, test]
+  push:
+    branches: [main, test]
   schedule:
-    - cron: '00 13 * * *'
+    - cron: '*/15 * * * *'
 
 jobs:  
-  build-cuda:
+  build-vortex:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v4
