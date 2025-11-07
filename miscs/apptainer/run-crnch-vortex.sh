@@ -16,4 +16,7 @@ ls
 cd $GITHUB_WORKSPACE/miscs/apptainer
 chmod +x run_apptainer.sh
 bash run_apptainer.sh
+pwd
+echo $HOME
+hostname
 
