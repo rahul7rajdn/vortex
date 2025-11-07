@@ -9,6 +9,7 @@
 
 ##Add commands here to build and execute
 cd $GITHUB_WORKSPACE
+echo $GITHUB_WORKSPACE
 hostname
 pwd
 ls

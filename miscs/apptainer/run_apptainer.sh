@@ -12,7 +12,7 @@ apptainer shell --fakeroot --cleanenv --writable-tmpfs \
   --bind /dev/bus/usb,/sys/bus/pci \
   --bind /projects:/projects \
   --bind /lib/firmware:/lib/firmware \
-  --bind /opt/xilinx/:/opt/xilinx/ \
+  --bind /opt/:/opt/ \
   --bind /tools:/tools \
   --bind /netscratch:/netscratch \
   --bind "$VORTEX_TOOLCHAIN_PATH":/home/tools \
