@@ -6,7 +6,7 @@ on:
   push:
     branches: [main, test]
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:  
   build-vortex:
@@ -14,5 +14,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Run batch file
-      run: cd miscs/apptainer && chmod +x run_apptainer.sh && sbatch run_apptainer.sh
+      run: cd miscs/apptainer && chmod +x run-crnch-vortex.sh && sbatch run-crnch-vortex.sh
       
