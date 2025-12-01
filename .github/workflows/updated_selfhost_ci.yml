@@ -44,6 +44,7 @@ jobs:
             --bind $TOOLCHAIN:/home/tools \
             $SIF_IMAGE \
             bash -c "
+              set -x
               set -e
               echo Inside Container:
               hostname
@@ -84,7 +85,7 @@ jobs:
               # Run ALL TESTS – EXACT MATCH TO OLD CI
               # -------------------------
               for XLEN in 32 64; do
-                echo '===== RUNNING TEST SUITES (XLEN='$XLEN') ====='
+                echo '===== RUNNING TEST SUITES (XLEN=$XLEN) ====='
                 cd build${XLEN}
                 source ci/toolchain_env.sh
                 chmod -R +x .
