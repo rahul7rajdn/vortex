@@ -6,7 +6,7 @@ on:
 
 jobs:
   vortex-ci:
-    runs-on: self-hosted, linux
+    runs-on: self-hosted
     env:
       SIF_IMAGE: /projects/tools/x86_64/containers/vortex_micro25.sif
       TOOLCHAIN: /projects/tools/x86_64/common-tools/vortex-tools
@@ -23,7 +23,7 @@ jobs:
           #!/bin/bash
           #SBATCH -J vortex-ci
           #SBATCH -N 1
-          #SBATCH --cpus-per-task=64
+          #SBATCH --cpus-per-task=16
           #SBATCH --mem=128G
           #SBATCH -t 06:00:00
           #SBATCH -p rg-nextgen-hpc
