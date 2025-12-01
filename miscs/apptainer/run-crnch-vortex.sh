@@ -15,5 +15,4 @@ pwd
 ls
 cd $GITHUB_WORKSPACE/miscs/apptainer
 chmod +x run_apptainer.sh
-bash run_apptainer.sh
-
+apptainer exec --bind ../../../vortex:/home/vortex  --bind  /projects/tools/x86_64/common-tools/vortex-tools:/home/tools /projects/tools/x86_64/containers/vortex_micro25.sif /home/vortex/miscs/apptainer/run_vortex.sh
