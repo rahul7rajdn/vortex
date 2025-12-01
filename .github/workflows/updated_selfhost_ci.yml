@@ -40,22 +40,25 @@ jobs:
 
           # ------------ ENTER APPTAINER ------------
           apptainer exec \
-            --bind $GITHUB_WORKSPACE:$GITHUB_WORKSPACE \
-            --bind $TOOLCHAIN:/opt/vortex-tools \
+            --bind $GITHUB_WORKSPACE:/home/vortex \
+            --bind $TOOLCHAIN:/home/tools \
             $SIF_IMAGE \
             bash -c "
               set -e
               echo Inside Container:
+              hostname
               uname -a
-              cd $GITHUB_WORKSPACE
+              pwd
+              cd /home/vortex
+              pwd
 
               # -------------------------
               # Build for XLEN = 32
               # -------------------------
               mkdir -p build32
               cd build32
-              ../configure --tooldir=/opt/vortex-tools --xlen=32
-              source ../ci/toolchain_env.sh
+              ../configure --tooldir=/home/tools --xlen=32
+              source ci/toolchain_env.sh
 
               echo 'Compiling software (32-bit)...'
               make -j64 software
@@ -68,8 +71,8 @@ jobs:
               # -------------------------
               mkdir -p build64
               cd build64
-              ../configure --tooldir=/opt/vortex-tools --xlen=64
-              source ../ci/toolchain_env.sh
+              ../configure --tooldir=/home/tools --xlen=64
+              source ci/toolchain_env.sh
 
               echo 'Compiling software (64-bit)...'
               make -j64 software
@@ -83,7 +86,7 @@ jobs:
               for XLEN in 32 64; do
                 echo '===== RUNNING TEST SUITES (XLEN='$XLEN') ====='
                 cd build${XLEN}
-                source ../ci/toolchain_env.sh
+                source ci/toolchain_env.sh
                 chmod -R +x .
 
                 # EXACT replication of old workflow
