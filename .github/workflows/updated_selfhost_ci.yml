@@ -41,7 +41,7 @@ jobs:
             --bind $GITHUB_WORKSPACE:/home/vortex \
             --bind $TOOLCHAIN:/home/tools \
             $SIF_IMAGE \
-            bash -c "
+            bash -s <<'INNER_EOF'
               set -xe
               cd /home/vortex
               echo '=================Inside apptainer:==========================='
@@ -93,7 +93,7 @@ jobs:
                 ./ci/regression.sh --tensor
                 cd ..
               done
-            "
+            INNER_EOF
           EOF
 
           # Submit job and capture job ID
