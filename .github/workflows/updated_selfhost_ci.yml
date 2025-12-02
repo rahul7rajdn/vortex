@@ -32,70 +32,51 @@ jobs:
           echo "===== SLURM Node Info ====="
           hostname
           echo "Current Dir: $PWD"
-
           echo "Using Apptainer Image: $SIF_IMAGE"
           echo "GitHub Workspace: $GITHUB_WORKSPACE"
 
           cd $GITHUB_WORKSPACE
 
-          # ------------ ENTER APPTAINER ------------
           apptainer exec \
             --bind $GITHUB_WORKSPACE:/home/vortex \
             --bind $TOOLCHAIN:/home/tools \
             $SIF_IMAGE \
             bash -c "
-              set -x
-              set -e
-              echo Inside Container:
-              hostname
-              uname -a
-              pwd
+              set -xe
               cd /home/vortex
+              echo '=================Inside apptainer:==========================='
+              hostname
+              nproc
               pwd
 
-              # -------------------------
-              # Build for XLEN = 32
-              # -------------------------
+              # Build 32
               mkdir -p build32
               cd build32
               ../configure --tooldir=/home/tools --xlen=32
               source ci/toolchain_env.sh
-
-              echo 'Compiling software (32-bit)...'
-              make -j64 software
-              echo 'Compiling tests (32-bit)...'
-              make -j64 tests
+              make -j$(nproc) software
+              make -j$(nproc) tests
               cd ..
 
-              # -------------------------
-              # Build for XLEN = 64
-              # -------------------------
+              # Build 64
               mkdir -p build64
               cd build64
               ../configure --tooldir=/home/tools --xlen=64
               source ci/toolchain_env.sh
-
-              echo 'Compiling software (64-bit)...'
-              make -j64 software
-              echo 'Compiling tests (64-bit)...'
-              make -j64 tests
+              make -j$(nproc) software
+              make -j$(nproc) tests
               cd ..
 
-              # -------------------------
-              # Run ALL TESTS – EXACT MATCH TO OLD CI
-              # -------------------------
+              # Run tests
               for XLEN in 32 64; do
-                echo '===== RUNNING TEST SUITES (XLEN=$XLEN) ====='
+                echo '==============> Running tests for XLEN='$XLEN
                 cd build${XLEN}
                 source ci/toolchain_env.sh
                 chmod -R +x .
-
-                # EXACT replication of old workflow
                 ./ci/regression.sh --unittest
                 ./ci/regression.sh --isa
                 ./ci/regression.sh --kernel
                 ./ci/regression.sh --regression
-
                 ./ci/regression.sh --opencl
                 ./ci/regression.sh --cache
                 ./ci/regression.sh --config1
@@ -108,11 +89,23 @@ jobs:
                 ./ci/regression.sh --vector
                 ./ci/regression.sh --cupbop
                 ./ci/regression.sh --tensor
-
                 cd ..
               done
             "
           EOF
 
-          sbatch vortex_ci_job.sh
+          # Submit job and capture job ID
+          JOBID=$(sbatch --parsable vortex_ci_job.sh)
+          echo "========> Submitted job: $JOBID"
+
+          # Wait for SLURM job to complete
+          echo "****************** Waiting for job to complete...********************"
+          while squeue -j $JOBID 2>/dev/null | grep -q $JOBID; do
+            sleep 10
+          done
+
+          # Now print SLURM output back to GitHub Actions
+          LOGFILE="/tools/ci-reports/vortex-ci-${JOBID}.out"
+          echo "===== SLURM JOB LOG ($LOGFILE) ====="
+          cat "$LOGFILE"
 
