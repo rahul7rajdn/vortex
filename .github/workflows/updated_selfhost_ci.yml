@@ -48,6 +48,9 @@ jobs:
               hostname
               nproc
               pwd
+              export VERILATOR_NO_CCACHE=1
+              export CCACHE_DISABLE=1
+
 
               # Build 32
               rm -rf build32
