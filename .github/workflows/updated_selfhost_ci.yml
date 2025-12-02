@@ -50,6 +50,7 @@ jobs:
               pwd
 
               # Build 32
+              rm -rf build32
               mkdir -p build32
               cd build32
               ../configure --tooldir=/home/tools --xlen=32
@@ -59,6 +60,7 @@ jobs:
               cd ..
 
               # Build 64
+              rm -rf build64
               mkdir -p build64
               cd build64
               ../configure --tooldir=/home/tools --xlen=64
@@ -68,7 +70,7 @@ jobs:
               cd ..
 
               # Run tests
-              for XLEN in 32 64; do
+              for ((XLEN=32; XLEN <= 64; XLEN=XLEN*2)); do
                 echo '==============> Running tests for XLEN='$XLEN
                 cd build${XLEN}
                 source ci/toolchain_env.sh
