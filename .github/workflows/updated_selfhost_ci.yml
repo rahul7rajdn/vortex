@@ -42,7 +42,7 @@ jobs:
             --bind $TOOLCHAIN:/home/tools \
             $SIF_IMAGE \
             bash -s <<'INNER_EOF'
-              set -xe
+              set -euo pipefail
               cd /home/vortex
               echo '=================Inside apptainer:==========================='
               hostname
@@ -58,6 +58,7 @@ jobs:
               cd build32
               ../configure --tooldir=/home/tools --xlen=32
               source ci/toolchain_env.sh
+              make -C /home/vortex/third_party -j$(nproc)
               make -j$(nproc) software
               make -j$(nproc) tests
               cd ..
@@ -68,6 +69,7 @@ jobs:
               cd build64
               ../configure --tooldir=/home/tools --xlen=64
               source ci/toolchain_env.sh
+              make -C /home/vortex/third_party -j$(nproc)
               make -j$(nproc) software
               make -j$(nproc) tests
               cd ..
