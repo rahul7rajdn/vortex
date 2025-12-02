@@ -71,8 +71,8 @@ jobs:
 
               # Run tests
               for ((XLEN=32; XLEN <= 64; XLEN=XLEN*2)); do
-                echo '==============> Running tests for XLEN='$XLEN
-                cd build${XLEN}
+                echo \"==============> Running tests for XLEN=\$XLEN\"
+                cd build\${XLEN}
                 source ci/toolchain_env.sh
                 chmod -R +x .
                 ./ci/regression.sh --unittest
