@@ -1,0 +1,118 @@
+name: CI-SelfHosted
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  vortex-ci:
+    runs-on: self-hosted
+    env:
+      SIF_IMAGE: /projects/tools/x86_64/containers/vortex_micro25.sif
+      TOOLCHAIN: /projects/tools/x86_64/common-tools/vortex-tools
+
+    steps:
+      - name: Checkout Vortex
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Submit SLURM Job
+        run: |
+          cat > vortex_ci_job.sh << EOF
+          #!/bin/bash
+          #SBATCH -J vortex-ci
+          #SBATCH -N 1
+          #SBATCH --cpus-per-task=16
+          #SBATCH --mem=128G
+          #SBATCH -t 06:00:00
+          #SBATCH -p rg-nextgen-hpc
+          #SBATCH -o /tools/ci-reports/vortex-ci-%j.out
+
+          echo "===== SLURM Node Info ====="
+          hostname
+          echo "Current Dir: $PWD"
+          echo "Using Apptainer Image: $SIF_IMAGE"
+          echo "GitHub Workspace: $GITHUB_WORKSPACE"
+
+          cd $GITHUB_WORKSPACE
+
+          apptainer exec \
+            --bind $GITHUB_WORKSPACE:/home/vortex \
+            --bind $TOOLCHAIN:/home/tools \
+            $SIF_IMAGE \
+            bash -s <<'INNER_EOF'
+              set -euo pipefail
+              cd /home/vortex
+              echo '=================Inside apptainer:==========================='
+              hostname
+              nproc
+              pwd
+              export VERILATOR_NO_CCACHE=1
+              export CCACHE_DISABLE=1
+
+
+              # Build 32
+              rm -rf build32
+              mkdir -p build32
+              cd build32
+              ../configure --tooldir=/home/tools --xlen=32
+              source ci/toolchain_env.sh
+              make -C /home/vortex/third_party -j$(nproc)
+              make -j$(nproc) software
+              make -j$(nproc) tests
+              cd ..
+
+              # Build 64
+              rm -rf build64
+              mkdir -p build64
+              cd build64
+              ../configure --tooldir=/home/tools --xlen=64
+              source ci/toolchain_env.sh
+              make -C /home/vortex/third_party -j$(nproc)
+              make -j$(nproc) software
+              make -j$(nproc) tests
+              cd ..
+
+              # Run tests
+              for ((XLEN=32; XLEN <= 64; XLEN=XLEN*2)); do
+                echo \"==============> Running tests for XLEN=\$XLEN\"
+                cd build\${XLEN}
+                source ci/toolchain_env.sh
+                chmod -R +x .
+                ./ci/regression.sh --unittest
+                ./ci/regression.sh --isa
+                ./ci/regression.sh --kernel
+                ./ci/regression.sh --regression
+                ./ci/regression.sh --opencl
+                ./ci/regression.sh --cache
+                ./ci/regression.sh --config1
+                ./ci/regression.sh --config2
+                ./ci/regression.sh --debug
+                ./ci/regression.sh --scope
+                ./ci/regression.sh --stress
+                ./ci/regression.sh --synthesis
+                ./ci/regression.sh --vm
+                ./ci/regression.sh --vector
+                ./ci/regression.sh --cupbop
+                ./ci/regression.sh --tensor
+                cd ..
+              done
+            INNER_EOF
+          EOF
+
+          # Submit job and capture job ID
+          JOBID=$(sbatch --parsable vortex_ci_job.sh)
+          echo "========> Submitted job: $JOBID"
+
+          # Wait for SLURM job to complete
+          echo "****************** Waiting for job to complete...********************"
+          while squeue -j $JOBID 2>/dev/null | grep -q $JOBID; do
+            sleep 10
+          done
+
+          # Now print SLURM output back to GitHub Actions
+          LOGFILE="/tools/ci-reports/vortex-ci-${JOBID}.out"
+          echo "===== SLURM JOB LOG ($LOGFILE) ====="
+          cat "$LOGFILE"
+
