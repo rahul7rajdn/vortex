@@ -1,6 +1,6 @@
 #include <vx_spawn.h>
 #include <assert.h>
-#include <algorithm>
+// #include <algorithm>
 #include "common.h"
 
 // Parallel Selection sort
@@ -12,6 +12,9 @@ struct key_t {
 static __attribute__((noinline)) void hacker(key_t* key, uint32_t task_id) {
 	key->user = task_id;
 }
+
+inline int min(int a, int b) { return (a < b) ? a : b; }
+inline int max(int a, int b) { return (a > b) ? a : b; }
 
 void kernel_body(kernel_arg_t* __UNIFORM__ arg) {
 	int32_t* src_ptr = (int32_t*)arg->src_addr;
@@ -87,8 +90,8 @@ void kernel_body(kernel_arg_t* __UNIFORM__ arg) {
 	value += (task_id >= 0) ? ((task_id > 5) ? src_ptr[0] : task_id) : ((task_id < 5) ? src_ptr[1] : -task_id);
 
 	// min/max
-	value += std::min(src_ptr[task_id], value);
-	value += std::max(src_ptr[task_id], value);
+	value += min(src_ptr[task_id], value);
+	value += max(src_ptr[task_id], value);
 
 	dst_ptr[task_id] = value;
 }

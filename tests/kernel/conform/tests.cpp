@@ -1,10 +1,13 @@
 #include "tests.h"
 #include <stdio.h>
-#include <algorithm>
+// #include <algorithm>
 #include <VX_config.h>
 #include <vx_intrinsics.h>
 #include <vx_print.h>
 #include <vx_spawn.h>
+
+inline int min(int a, int b) { return (a < b) ? a : b; }
+inline int max(int a, int b) { return (a > b) ? a : b; }
 
 int __attribute__((noinline)) check_error(const int* __UNIFORM__  buffer, int __UNIFORM__  offset, int __UNIFORM__  size) {
 	int errors = 0;
@@ -65,7 +68,7 @@ void __attribute__((noinline)) do_lmem_rd() {
 int test_local_memory() {
 	PRINTF("Local Memory Test\n");
 
-	int num_threads = std::min(vx_num_threads(), 8);
+	int num_threads = min(vx_num_threads(), 8);
 	int tmask = make_full_tmask(num_threads);
 	vx_tmc(tmask);
 	do_lmem_wr();
@@ -87,7 +90,7 @@ void __attribute__((noinline)) do_tmc() {
 int test_tmc() {
 	PRINTF("TMC Test\n");
 
-	int num_threads = std::min(vx_num_threads(), 8);
+	int num_threads = min(vx_num_threads(), 8);
 	int tmask = make_full_tmask(num_threads);
 	vx_tmc(tmask);
 	do_tmc();
@@ -108,7 +111,7 @@ void __attribute__((noinline)) do_pred() {
 
 int test_pred() {
 	PRINTF("PRED Test\n");
-	int num_threads = std::min(vx_num_threads(), 8);
+	int num_threads = min(vx_num_threads(), 8);
 	int tmask = make_full_tmask(num_threads);
 
 	for (int i = 1; i < num_threads; i++) {
@@ -134,7 +137,7 @@ void wspawn_kernel() {
 
 int test_wsapwn() {
 	PRINTF("Wspawn Test\n");
-	int num_warps = std::min(vx_num_warps(), 8);
+	int num_warps = min(vx_num_warps(), 8);
 	vx_wspawn(num_warps, wspawn_kernel);
 	wspawn_kernel();
 
@@ -186,7 +189,7 @@ void __attribute__((noinline)) do_divergence() {
 int test_divergence() {
 	PRINTF("Control Divergence Test\n");
 
-	int num_threads = std::min(vx_num_threads(), 4);
+	int num_threads = min(vx_num_threads(), 4);
 	int tmask = make_full_tmask(num_threads);
 	vx_tmc(tmask);
 	do_divergence();
@@ -248,7 +251,7 @@ void __attribute__((noinline)) do_serial() {
 
 int test_serial() {
 	PRINTF("Serial Test\n");
-	int num_threads = std::min(vx_num_threads(), 8);
+	int num_threads = min(vx_num_threads(), 8);
 	int tmask = make_full_tmask(num_threads);
 	vx_tmc(tmask);
 	do_serial();
@@ -275,7 +278,7 @@ void barrier_kernel() {
 
 int test_barrier() {
 	PRINTF("Barrier Test\n");
-	int num_warps = std::min(vx_num_warps(), 8);
+	int num_warps = min(vx_num_warps(), 8);
 	barrier_ctr = num_warps;
 	barrier_stall = 0;
 	vx_wspawn(num_warps, barrier_kernel);
@@ -302,7 +305,7 @@ void tls_kernel() {
 
 int test_tls() {
 	PRINTF("TLS Test\n");
-	int num_warps = std::min(vx_num_warps(), 8);
+	int num_warps = min(vx_num_warps(), 8);
 	vx_wspawn(num_warps, tls_kernel);
 	tls_kernel();
 	return check_error(tls_buffer, 0, num_warps);
@@ -314,7 +317,7 @@ int test_tls() {
 int vote_buffer[VOTE_GROUP_SZ];
 
 void __attribute__((noinline)) do_vote() {
-	int num_threads = std::min(vx_num_threads(), VOTE_GROUP_SZ);
+	int num_threads = min(vx_num_threads(), VOTE_GROUP_SZ);
 	int tmask = make_full_tmask(num_threads);
 	int tid = vx_thread_id();
 
@@ -346,7 +349,7 @@ void __attribute__((noinline)) do_vote() {
 
 int test_vote() {
 	PRINTF("Vote Test\n");
-	int num_threads = std::min(vx_num_threads(), VOTE_GROUP_SZ);
+	int num_threads = min(vx_num_threads(), VOTE_GROUP_SZ);
 	int tmask = make_full_tmask(num_threads);
 	vx_tmc(tmask); // active all threads
 	do_vote();
@@ -360,7 +363,7 @@ int test_vote() {
 int shfl_buffer[SHFL_GROUP_SZ];
 
 void __attribute__((noinline)) do_shfl() {
-	int num_threads = std::min(vx_num_threads(), VOTE_GROUP_SZ);
+	int num_threads = min(vx_num_threads(), VOTE_GROUP_SZ);
 	int tmask = make_full_tmask(num_threads);
 	int tid = vx_thread_id();
 	int value = 65 + tid;
@@ -395,7 +398,7 @@ void __attribute__((noinline)) do_shfl() {
 
 int test_shfl() {
 	PRINTF("Shuffle Test\n");
-	int num_threads = std::min(vx_num_threads(), SHFL_GROUP_SZ);
+	int num_threads = min(vx_num_threads(), SHFL_GROUP_SZ);
 	int tmask = make_full_tmask(num_threads);
 	vx_tmc(tmask); // active all threads
 	do_shfl();

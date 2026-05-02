@@ -26,9 +26,12 @@ LLVM_VORTEX ?= $(TOOLDIR)/llvm-vortex
 LIBC_VORTEX ?= $(TOOLDIR)/libc$(XLEN)
 LIBCRT_VORTEX ?= $(TOOLDIR)/libcrt$(XLEN)
 
-RISCV_TOOLCHAIN_PATH ?= $(TOOLDIR)/riscv$(XLEN)-gnu-toolchain
+# RISCV_TOOLCHAIN_PATH ?= $(TOOLDIR)/riscv$(XLEN)-gnu-toolchain
+RISCV_TOOLCHAIN_PATH ?= $(TOOLDIR)/riscstar-toolchain-15.2-r1-aarch64-riscv32-none-elf
 
-RISCV_PREFIX  ?= riscv$(XLEN)-unknown-elf
+# RISCV_PREFIX  ?= riscv$(XLEN)-unknown-elf
+RISCV_PREFIX  ?= riscv$(XLEN)-none-elf
+
 RISCV_SYSROOT ?= $(RISCV_TOOLCHAIN_PATH)/$(RISCV_PREFIX)
 
 THIRD_PARTY_DIR ?= $(VORTEX_HOME)/third_party

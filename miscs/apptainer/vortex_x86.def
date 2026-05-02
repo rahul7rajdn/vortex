@@ -1,0 +1,92 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%files
+    install_boost_openssl.sh .
+    openssl-package.deb .
+    boost-package.deb .
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    echo 'APT::Sandbox::User "root";' > /etc/apt/apt.conf.d/no-sandbox
+
+    # Create required mount point stubs
+    mkdir -p /netscratch /projects /home/tools /home/vortex \
+             /opt/xilinx /tools /lib/firmware
+
+    # Baseline update
+    apt-get update -y
+    apt-get install -y --no-install-recommends \
+        fakeroot wget git vim curl \
+        build-essential g++ gcc make gawk bison flex perl \
+        bzip2 unzip zlib1g-dev \
+        libtinfo6 uuid-dev ccache \
+        ca-certificates \
+        locales \
+        python3 python3-pip \
+        zstd \
+        usbutils pciutils \
+        openjdk-11-jre-headless \
+        libfontconfig1 libpango-1.0-0 libpangoft2-1.0-0 libpangocairo-1.0-0 \
+        libcairo2 libcairo-gobject2 librsvg2-2 librsvg2-common \
+        libavformat58 libavcodec58 libbluray2 libtheora0 libchromaprint1 \
+        libboost-filesystem1.74.0 libboost-program-options1.74.0 \
+        libboost-system1.74.0 libboost-chrono1.74.0 libboost-thread1.74.0 \
+        openmpi-bin libopenmpi-dev \
+        iproute2 net-tools \
+        software-properties-common environment-modules \
+        nvidia-cuda-toolkit
+
+    # Symlink python
+    ln -sf /usr/bin/python3 /usr/bin/python
+
+    # Locale
+    locale-gen en_US.UTF-8
+    update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+    # CMake 3.26 (x86_64)
+    ARCH=x86_64
+    wget -q https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-linux-${ARCH}.sh \
+        -O /tmp/cmake.sh
+    chmod +x /tmp/cmake.sh
+    mkdir -p /opt/cmake
+    /tmp/cmake.sh --skip-license --prefix=/opt/cmake
+    ln -sf /opt/cmake/bin/cmake /usr/local/bin/cmake
+    rm -f /tmp/cmake.sh
+
+    # Boost + OpenSSL (custom versions needed by Vortex)
+    cp install_boost_openssl.sh /tmp/
+    chmod +x /tmp/install_boost_openssl.sh
+    /tmp/install_boost_openssl.sh
+    rm -f /tmp/install_boost_openssl.sh
+
+    # Cleanup
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+    export OMPI_ALLOW_RUN_AS_ROOT=1
+    export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+    export PATH=/usr/lib/x86_64-linux-gnu/openmpi/bin:/opt/cmake/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/boost-1.66/lib:/opt/openssl-1.1/lib:$LD_LIBRARY_PATH
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+    export HOME=/home
+
+%runscript
+    exec /bin/bash "$@"
+
+%labels
+    Author Rahul, Udit
+    Version 3.0-x86
+    Architecture x86_64
+
+%test
+    locale
+    cmake --version
+    mpirun --version
+    python3 --version
+    lsusb || echo "lsusb: no USB bus (expected in CI)"
+    echo "x86 container test passed"

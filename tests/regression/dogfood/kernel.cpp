@@ -9,6 +9,8 @@ inline float __ieee754_sqrtf (float x) {
   asm ("fsqrt.s %0, %1" : "=f" (x) : "f" (x));
   return x;
 }
+inline int min(int a, int b) { return (a < b) ? a : b; }
+inline int max(int a, int b) { return (a > b) ? a : b; }
 
 void kernel_iadd(kernel_arg_t* __UNIFORM__ arg) {
 	auto count    = arg->task_size;
@@ -324,7 +326,7 @@ void kernel_fclamp(kernel_arg_t* __UNIFORM__ arg) {
 }
 
 inline int iclamp(int a, int b, int c) {
-  return std::min(std::max(a, b), c);
+  return min(max(a, b), c);
 }
 
 void kernel_iclamp(kernel_arg_t* __UNIFORM__ arg) {
