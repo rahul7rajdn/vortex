@@ -1,4 +1,4 @@
-# Case 9 — GPU to GPU Communication over RDMA (NCCL AllReduce)
+# Case I — GPU to GPU Communication over RDMA (NCCL AllReduce)
 
 ![image](./diagram.png)
 

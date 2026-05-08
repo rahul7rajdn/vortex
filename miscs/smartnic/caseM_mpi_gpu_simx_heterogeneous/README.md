@@ -1,4 +1,4 @@
-# Case 13 — Heterogeneous MPI: GPU Ranks + Vortex SIMX Ranks (x86)
+# Case M — Heterogeneous MPI: GPU Ranks + Vortex SIMX Ranks (x86)
 
 ![image](./diagram.png)
 

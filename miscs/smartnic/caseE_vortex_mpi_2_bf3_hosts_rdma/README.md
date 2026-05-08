@@ -1,4 +1,4 @@
-# Case 5 — Vortex MPI: 2 BF3 ARM Nodes over RDMA
+# Case E — Vortex MPI: 2 BF3 ARM Nodes over RDMA
 
 ![image](./diagram.png)
 

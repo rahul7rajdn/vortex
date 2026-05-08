@@ -1,4 +1,4 @@
-# Case 10 — GPUDirect RDMA (H100 ↔ A100 via ConnectX-7)
+# Case J — GPUDirect RDMA (H100 ↔ A100 via ConnectX-7)
 
 ![image](./diagram.png)
 

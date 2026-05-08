@@ -1,4 +1,4 @@
-# Case 14 — End-to-End In-Network Compute Pipeline
+# Case N — End-to-End In-Network Compute Pipeline
 
 ![image](./diagram.png)
 

@@ -1,4 +1,4 @@
-# Case 6 — Host-to-Host RDMA (violet1 ↔ violet2, x86)
+# Case F — Host-to-Host RDMA (violet1 ↔ violet2, x86)
 
 ![image](./diagram.png)
 

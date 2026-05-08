@@ -1,4 +1,4 @@
-# Case 12 — MPI Cross-Architecture (x86 ↔ aarch64)
+# Case L — MPI Cross-Architecture (x86 ↔ aarch64)
 
 ![image](./diagram.png)
 

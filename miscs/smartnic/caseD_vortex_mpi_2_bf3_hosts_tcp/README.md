@@ -1,4 +1,4 @@
-# Case 4 — Vortex MPI: 2 BF3 ARM Nodes over TCP
+# Case D — Vortex MPI: 2 BF3 ARM Nodes over TCP
 
 ![image](./diagram.png)
 

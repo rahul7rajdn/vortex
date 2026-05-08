@@ -1,4 +1,4 @@
-# Case 2 — Vortex MPI Between Two Apptainer Instances (Same BF3 Host)
+# Case B — Vortex MPI Between Two Apptainer Instances (Same BF3 Host)
 
 ![image](./diagram.png)
 

@@ -1,4 +1,4 @@
-# Case 11 — MPI Halo Exchange Benchmark (Vortex SIMX + RDMA)
+# Case K — MPI Halo Exchange Benchmark (Vortex SIMX + RDMA)
 
 ![image](./diagram.png)
 

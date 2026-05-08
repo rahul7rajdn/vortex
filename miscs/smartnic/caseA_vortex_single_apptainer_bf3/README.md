@@ -1,4 +1,4 @@
-# Case 1 — Vortex SIMX on a Single Apptainer (BF3 aarch64)
+# Case A — Vortex SIMX on a Single Apptainer (BF3 aarch64)
 
 ![image](./diagram.png)
 

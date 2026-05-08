@@ -1,4 +1,4 @@
-# Case 8 — GPU to GPU Communication over TCP (NCCL AllReduce)
+# Case H — GPU to GPU Communication over TCP (NCCL AllReduce)
 
 ![image](./diagram.png)
 

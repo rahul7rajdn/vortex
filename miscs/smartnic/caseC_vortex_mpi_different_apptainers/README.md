@@ -1,4 +1,4 @@
-# Case 3 — Vortex MPI: 2 Ranks Without Apptainer (Same BF3 Host)
+# Case C — Vortex MPI: 2 Ranks Without Apptainer (Same BF3 Host)
 
 ![image](./diagram.png)
 
