@@ -1,5 +1,7 @@
 # Case 5 — Vortex MPI: 2 BF3 ARM Nodes over RDMA
 
+![image](./diagram.png)
+
 ## What this case does
 
 Runs Vortex SIMX MPI with 2 ranks distributed across two BF3 ARM nodes using

@@ -1,5 +1,7 @@
 # Case 9 — GPU to GPU Communication over RDMA (NCCL AllReduce)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Measures GPU-to-GPU AllReduce bandwidth using NCCL over RoCEv2 RDMA via the

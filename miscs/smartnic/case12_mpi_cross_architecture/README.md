@@ -1,5 +1,7 @@
 # Case 12 — MPI Cross-Architecture (x86 ↔ aarch64)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Demonstrates MPI communication between two processes running on different CPU

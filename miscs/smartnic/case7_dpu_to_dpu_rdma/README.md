@@ -1,5 +1,7 @@
 # Case 7 — DPU ARM to DPU ARM RDMA (violet1-bf3-1 ↔ violet2-bf3-1)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Measures raw RDMA bandwidth between the ARM processors of two BF3 SmartNICs

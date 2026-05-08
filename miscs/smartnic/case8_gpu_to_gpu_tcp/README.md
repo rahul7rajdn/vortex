@@ -1,5 +1,7 @@
 # Case 8 — GPU to GPU Communication over TCP (NCCL AllReduce)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Measures GPU-to-GPU AllReduce bandwidth using NCCL over TCP/IP sockets.

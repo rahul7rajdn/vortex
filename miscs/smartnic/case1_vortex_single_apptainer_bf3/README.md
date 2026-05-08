@@ -1,5 +1,7 @@
 # Case 1 — Vortex SIMX on a Single Apptainer (BF3 aarch64)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Runs Vortex SIMX inside a single Apptainer container on the BF3 ARM processor (aarch64).

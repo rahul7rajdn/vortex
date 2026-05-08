@@ -1,5 +1,7 @@
 # Case 3 — Vortex MPI: 2 Ranks Without Apptainer (Same BF3 Host)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Runs Vortex SIMX MPI with 2 ranks natively on the BF3 ARM — no apptainer.

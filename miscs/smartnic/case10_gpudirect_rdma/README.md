@@ -1,5 +1,7 @@
 # Case 10 — GPUDirect RDMA (H100 ↔ A100 via ConnectX-7)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Measures RDMA bandwidth where the source and destination buffers are GPU VRAM

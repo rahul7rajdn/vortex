@@ -1,5 +1,7 @@
 # Case 11 — MPI Halo Exchange Benchmark (Vortex SIMX + RDMA)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Runs a halo exchange benchmark where each MPI rank uses Vortex SIMX to compute

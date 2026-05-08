@@ -1,5 +1,7 @@
 # Case 2 — Vortex MPI Between Two Apptainer Instances (Same BF3 Host)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Runs two MPI ranks of Vortex SIMX where each rank runs inside its own separate Apptainer

@@ -1,5 +1,7 @@
 # Case 13 — Heterogeneous MPI: GPU Ranks + Vortex SIMX Ranks (x86)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Runs a heterogeneous MPI workload on a single x86 host (violet2) where even-numbered

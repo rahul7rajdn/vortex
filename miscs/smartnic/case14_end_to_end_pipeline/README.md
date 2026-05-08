@@ -1,5 +1,7 @@
 # Case 14 — End-to-End In-Network Compute Pipeline
 
+![image](./diagram.png)
+
 ## What this case does
 
 Proves the complete in-network compute pipeline:

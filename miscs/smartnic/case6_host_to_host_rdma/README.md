@@ -1,5 +1,7 @@
 # Case 6 — Host-to-Host RDMA (violet1 ↔ violet2, x86)
 
+![image](./diagram.png)
+
 ## What this case does
 
 Measures raw RDMA bandwidth between violet1 and violet2 x86 host servers using
