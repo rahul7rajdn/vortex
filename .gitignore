@@ -3,4 +3,4 @@
 *.cache
 *.code-workspace
 miscs/apptainer/*.sif
-miscs/smartnic/innetwork_prototype/build
+miscs/smartnic/innetwork_prototype/build*
